@@ -7,7 +7,10 @@ const path = require("path");
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/mystery-box");
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 // View Engine
 app.engine("ejs", engine);
@@ -24,6 +27,7 @@ const promptRoutes = require("./routes/prompts");
 app.use("/", promptRoutes);
 
 // Server
-app.listen(3000, () => {
-  console.log("🚀 App running at http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 App running at http://localhost:${PORT}`);
 });
