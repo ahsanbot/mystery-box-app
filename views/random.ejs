@@ -1,0 +1,82 @@
+<% layout('layout') %>
+
+<h2 class="mb-4 text-center">Open Your Mystery Box</h2>
+
+<!-- Flip Container -->
+<div class="flip-container mx-auto" id="flipContainer">
+  <div class="flipper" id="flipper">
+    <div class="front card p-4 shadow-sm text-center fade-in" id="promptCard">
+      <% if (random) { %>
+      <p class="fs-4 animate-text">
+        <strong>Prompt:</strong> <%= random.prompt %>
+      </p>
+      <p><strong>Category:</strong> <%= random.category %></p>
+      <% if (random.notes) { %>
+      <p><strong>Notes:</strong> <%= random.notes %></p>
+      <% } %> <% } else { %>
+      <p class="text-muted">No open prompts available.</p>
+      <% } %>
+    </div>
+
+    <div class="back card p-4 shadow-sm text-center" id="promptBack"></div>
+  </div>
+</div>
+
+<!-- Buttons -->
+<div class="text-center mt-4">
+  <button id="newPromptBtn" class="btn btn-outline-primary">Try Another</button>
+  <a href="/prompts" class="btn btn-secondary ms-2">Go Back</a>
+</div>
+<script>
+  const btn = document.getElementById("newPromptBtn");
+  const flipContainer = document.getElementById("flipContainer");
+  const flipper = document.getElementById("flipper");
+  const front = document.getElementById("promptCard");
+  const back = document.getElementById("promptBack");
+
+  btn.addEventListener("click", async () => {
+    btn.disabled = true;
+    btn.innerText = "Loading...";
+
+    try {
+      const res = await fetch(`/random?ts=${Date.now()}`, {
+        headers: {
+          Accept: "application/json",
+          "Cache-Control": "no-cache",
+        },
+      });
+
+      const data = await res.json();
+
+      if (data.random) {
+        back.innerHTML = `
+          <p class="fs-4 animate-text"><strong>Prompt:</strong> ${
+            data.random.prompt
+          }</p>
+          <p><strong>Category:</strong> ${data.random.category || "N/A"}</p>
+          ${
+            data.random.notes
+              ? `<p><strong>Notes:</strong> ${data.random.notes}</p>`
+              : ""
+          }
+        `;
+      } else {
+        back.innerHTML = `<p class="text-muted">No open prompts available.</p>`;
+      }
+
+      flipContainer.classList.add("flip");
+
+      setTimeout(() => {
+        front.innerHTML = back.innerHTML;
+        flipContainer.classList.remove("flip");
+        btn.disabled = false;
+        btn.innerText = "Try Another";
+      }, 800);
+    } catch (err) {
+      front.innerHTML = `<p class="text-danger">Error loading prompt</p>`;
+      console.error(err);
+      btn.disabled = false;
+      btn.innerText = "Try Another";
+    }
+  });
+</script>

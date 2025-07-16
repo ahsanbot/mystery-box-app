@@ -1,0 +1,41 @@
+<% layout('layout') %>
+
+<h2 class="mb-4">Add a New Mystery Prompt</h2>
+<a href="/prompts" class="btn btn-secondary mb-3">Go Back</a>
+
+<form
+  action="/prompts"
+  method="POST"
+  class="border p-4 rounded bg-light shadow-sm"
+>
+  <div class="mb-3">
+    <label for="prompt" class="form-label">Prompt</label>
+    <input
+      type="text"
+      class="form-control"
+      id="prompt"
+      name="prompt"
+      required
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="category" class="form-label">Category</label>
+    <input type="text" class="form-control" id="category" name="category" />
+  </div>
+
+  <div class="mb-3">
+    <label for="status" class="form-label">Status</label>
+    <select class="form-select" id="status" name="status">
+      <option value="Open">Open</option>
+      <option value="Done">Done</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="notes" class="form-label">Notes (optional)</label>
+    <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-success">Add Prompt</button>
+</form>

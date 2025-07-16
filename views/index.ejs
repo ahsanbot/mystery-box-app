@@ -1,0 +1,73 @@
+<% layout('layout') %>
+
+<!-- Success Alert -->
+<% if (typeof success !== "undefined" && success) { %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= success %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
+
+<!-- Header + Add Prompt Button -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0">📋 All Mystery Prompts</h2>
+  <a href="/prompts/new" class="btn btn-success">Add Prompt</a>
+</div>
+
+<!-- Search & Filter Form -->
+<form class="row g-3 mb-4" method="GET" action="/prompts">
+  <div class="col-md-4">
+    <input type="text" class="form-control" name="search" placeholder="Search prompt..." value="<%= search %>">
+  </div>
+  <div class="col-md-3">
+    <select class="form-select" name="status">
+      <option value="">All Status</option>
+      <option value="Open" <%= status === 'Open' ? 'selected' : '' %>>Open</option>
+      <option value="Done" <%= status === 'Done' ? 'selected' : '' %>>Done</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <input type="text" class="form-control" name="category" placeholder="Category" value="<%= category %>">
+  </div>
+  <div class="col-md-2">
+    <button class="btn btn-primary w-100">🔍 Filter</button>
+  </div>
+</form>
+
+<!-- 🧠 Prompt Stats -->
+<div class="mb-4">
+  <span class="badge bg-primary me-2">Total: <%= total %></span>
+  <span class="badge bg-success me-2">Open: <%= open %></span>
+  <span class="badge bg-secondary">Done: <%= done %></span>
+</div>
+
+<!-- 📋 Prompt Table -->
+<table class="table table-hover align-middle shadow-sm">
+  <thead class="table-light">
+    <tr>
+      <th>Prompt</th>
+      <th>Category</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% prompts.forEach(prompt => { %>
+    <tr>
+      <td><%= prompt.prompt %></td>
+      <td><%= prompt.category %></td>
+      <td>
+        <span class="badge <%= prompt.status === 'Done' ? 'bg-secondary' : 'bg-success' %>">
+          <%= prompt.status %>
+        </span>
+      </td>
+      <td>
+        <a href="/prompts/<%= prompt._id %>/edit" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+        <form action="/prompts/<%= prompt._id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('Delete this prompt?')">
+          <button class="btn btn-sm btn-outline-danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>

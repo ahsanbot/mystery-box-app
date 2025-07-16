@@ -1,0 +1,33 @@
+<% layout('layout') %>
+
+<h2 class="mb-4">Edit Prompt</h2>
+
+<a href="/prompts" class="btn btn-secondary mb-4">Go Back</a>
+
+<form action="/prompts/<%= prompt._id %>?_method=PUT" method="POST" class="border p-5 rounded bg-light shadow-sm">
+
+  <div class="mb-4">
+    <label for="prompt" class="form-label">Prompt</label>
+    <input type="text" id="prompt" name="prompt" class="form-control" value="<%= prompt.prompt %>" required>
+  </div>
+
+  <div class="mb-4">
+    <label for="category" class="form-label">Category</label>
+    <input type="text" id="category" name="category" class="form-control" value="<%= prompt.category %>">
+  </div>
+
+  <div class="mb-4">
+    <label for="status" class="form-label">Status</label>
+    <select id="status" name="status" class="form-select">
+      <option value="Open" <%= prompt.status === 'Open' ? 'selected' : '' %>>Open</option>
+      <option value="Done" <%= prompt.status === 'Done' ? 'selected' : '' %>>Done</option>
+    </select>
+  </div>
+
+  <div class="mb-4">
+    <label for="notes" class="form-label">Notes</label>
+    <textarea id="notes" name="notes" class="form-control" rows="3"><%= prompt.notes %></textarea>
+  </div>
+
+  <button class="btn btn-warning">💾 Update Prompt</button>
+</form>
